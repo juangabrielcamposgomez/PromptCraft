@@ -12,13 +12,12 @@ applications:
         build:
           commands:
             - cd $(git rev-parse --show-toplevel) && pnpm --filter web run build
-            # ✅ Localización dinámica de .next para evitar fallos de rutas relativas
-            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && echo "NEXT_DIR=$NEXT_DIR" && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir")
+            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir") && ls $NEXT_DIR/standalone/apps/web/
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
-      startCommand: node server.js
+      startCommand: HOSTNAME=0.0.0.0 node server.js
       cache:
         paths:
           - node_modules/**/*
