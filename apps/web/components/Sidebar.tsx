@@ -8,7 +8,8 @@ import {
   Code2, 
   ChevronRight,
   ShieldCheck,
-  ShieldAlert
+  ShieldAlert,
+  Rocket
 } from "lucide-react";
 import Link from "next/link";
 
