@@ -11,9 +11,10 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # ✅ Fix EACCES: Ejecutamos el build localmente en apps/web 
-            # para evitar que pnpm escanee el root del sistema (/run/cryptsetup)
-            - pnpm run build
+            # ✅ Fix Path & EACCES: 
+            # Forzamos la ejecución en el directorio correcto usando --prefix
+            # Esto evita tanto el error de 'No package.json' como el de permisos 'EACCES'
+            - cd ../.. && pnpm --prefix apps/web run build
             # ✅ Estructura Standalone:
             - mkdir -p .next/standalone/apps/web/.next
             - cp -r public .next/standalone/apps/web/
