@@ -12,19 +12,16 @@ applications:
         build:
           commands:
             - cd ../.. && pnpm --filter web run build
-            # 🔍 Diagnóstico (Mantenemos esto para confirmar rutas)
-            - echo "--- LOCALIZANDO SERVER.JS ---"
-            - find ../../ -name "server.js" -path "*standalone*" 2>/dev/null || echo "server.js not found"
-            # Copia de assets a la ruta standalone
-            - cp -r .next/static .next/standalone/apps/web/.next/static || true
-            - "[ -d public ] && cp -r public .next/standalone/apps/web/ || true"
+            # ✅ Corrigiendo Paths: Usamos rutas ancladas a la raíz mediante ../../
+            - cp -r ../../apps/web/.next/static ../../apps/web/.next/standalone/apps/web/.next/static
+            - '[ -d ../../apps/web/public ] && cp -r ../../apps/web/public ../../apps/web/.next/standalone/apps/web/ || echo "No public dir"'
       artifacts:
-        baseDirectory: .next/standalone/apps/web
+        # BaseDirectory anclado también
+        baseDirectory: ../../apps/web/.next/standalone/apps/web
         files:
           - '**/*'
-      # ✅ Comando de inicio explícito para WEB_COMPUTE
       startCommand: node server.js
       cache:
         paths:
           - ../../node_modules/**/*
-          - .next/cache/**/*
+          - ../../apps/web/.next/cache/**/*
