@@ -11,12 +11,11 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - cd ../.. && pnpm --filter web run build
-            # ✅ Capturamos la raíz absoluta para evitar confusiones de CWD
-            - REPO_ROOT=$(cd ../.. && pwd) && cp -r $REPO_ROOT/apps/web/.next/static $REPO_ROOT/apps/web/.next/standalone/apps/web/.next/static
-            - REPO_ROOT=$(cd ../.. && pwd) && ([ -d $REPO_ROOT/apps/web/public ] && cp -r $REPO_ROOT/apps/web/public $REPO_ROOT/apps/web/.next/standalone/apps/web/ || echo "No public dir")
+            # ✅ Capturamos la ruta de la aplicación activa (apps/web) antes de cualquier CD
+            - export REPO_ROOT=$(pwd) && cd ../.. && pnpm --filter web run build
+            - export REPO_ROOT=$(pwd) && cp -r $REPO_ROOT/.next/static $REPO_ROOT/.next/standalone/apps/web/.next/static
+            - export REPO_ROOT=$(pwd) && ([ -d $REPO_ROOT/public ] && cp -r $REPO_ROOT/public $REPO_ROOT/.next/standalone/apps/web/ || echo "No public dir")
       artifacts:
-        # BaseDirectory relativo al appRoot (apps/web)
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
