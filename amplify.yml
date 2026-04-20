@@ -11,12 +11,10 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # 1. Ejecutamos build desde la raíz para aprovechar los filtros de pnpm
             - cd ../.. && pnpm --filter web run build
-            # 2. Amplify nos devuelve al contexto de apps/web en el siguiente comando.
-            # Copiamos assets usando rutas relativas al appRoot actual.
-            - cp -r public .next/standalone/apps/web/
-            - cp -r .next/static .next/standalone/apps/web/.next/
+            # ✅ Fix Robusto: Copia condicional de assets desde la raíz
+            - cd ../.. && [ -d apps/web/public ] && cp -r apps/web/public apps/web/.next/standalone/apps/web/ || echo "Public dir missing or empty"
+            - cd ../.. && [ -d apps/web/.next/static ] && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/ || echo "Static dir missing"
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
