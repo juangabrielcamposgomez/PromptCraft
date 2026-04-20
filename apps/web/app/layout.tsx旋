@@ -1,0 +1,38 @@
+import type { Metadata } from "next";
+import { Inter, Outfit } from "next/font/google";
+import "./globals.css";
+import Sidebar from "../components/Sidebar";
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const outfit = Outfit({ 
+  subsets: ["latin"],
+  variable: "--font-outfit",
+});
+
+export const metadata: Metadata = {
+  title: "PromptCraft Academy | SDLC Mastering",
+  description: "Master the SDLC with AI-powered prompt engineering",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>): React.ReactNode {
+  return (
+    <html lang="es" className="dark">
+      <body className={`${inter.variable} ${outfit.variable} font-sans bg-background text-foreground antialiased`}>
+        <div className="flex">
+          <Sidebar />
+          <main className="flex-1 ml-72 min-h-screen p-8 bg-[radial-gradient(circle_at_top_right,_var(--color-primary)_0%,_transparent_25%)]">
+            {children}
+          </main>
+        </div>
+      </body>
+    </html>
+  );
+}

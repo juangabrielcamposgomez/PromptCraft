@@ -1,0 +1,29 @@
+// .cursorrules
+
+# PromptCraft Academy - Senior Rules
+
+## Contexto del Proyecto
+- Monorepo gestionado con Turborepo.
+- Base de Datos: PostgreSQL en AWS RDS (Instancia: promptcraft-db).
+- ORM: Prisma ubicado en `packages/core`.
+- Frontend: Next.js (App Router) en `apps/web`.
+- Gestor de paquetes: npm (ejecutar comandos desde la raíz o carpetas específicas).
+
+## Reglas de Comportamiento del Agente
+1. **Idioma:** Responde siempre en español.
+2. **Formato de Salida:** Entrega SOLO el código y la ruta del archivo. Sin introducciones, sin explicaciones, sin saludos.
+3. **Estilo Visual (PromptCraft Brand):**
+   - Background: #0B0B0B (Deep Space)
+   - Foreground: #F3EFE0 (Solar Sand)
+   - Primary: #00A67E (Emerald Innovation)
+   - Accent: #9177C7 (Cybernetic Purple)
+4. **Arquitectura:**
+   - Usa Server Components para fetch de datos desde Prisma.
+   - Importa el cliente de Prisma siempre desde `@devflow/core`.
+   - Usa `lucide-react` para iconos.
+   - Implementa Glassmorphism sutil en la UI.
+
+## Restricciones Anti-Alucinación
+- No inventes tablas. Consulta siempre `packages/core/prisma/schema.prisma`.
+- No crees archivos `.env` nuevos; usa los existentes o indica qué variable falta.
+- Si el usuario pide algo que rompe la arquitectura del monorepo, advierte brevemente.

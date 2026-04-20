@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  PROFESOR
+  APODERADO
+}
+
+model Profile {
+  id            String   @id @default(uuid())
+  userId        String   @unique @map("user_id")
+  fullName      String   @map("full_name")
+  avatarUrl     String?  @map("avatar_url")
+  role          UserRole @default(APODERADO)
+  uiPreferences Json     @default("{\"theme\": \"dark\", \"dashboard_view\": \"summary\", \"glassmorphism\": false}") @map("ui_preferences")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  projects Project[]
+  logs     ExecutionLog[]
+
+  @@map("profiles")
+}
+
+model SdlcPhase {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  orderIndex  Int      @map("order_index")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  categories Category[]
+
+  @@map("sdlc_phases")
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  phaseId     String     @map("phase_id")
+  phase       SdlcPhase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  templates PromptTemplate[]
+
+  @@map("categories")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  user        Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  templates PromptTemplate[]
+
+  @@map("projects")
+}
+
+model PromptTemplate {
+  id             String   @id @default(uuid())
+  projectId      String   @map("project_id")
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  categoryId     String?  @map("category_id")
+  category       Category? @relation(fields: [categoryId], references: [id])
+  title          String
+  currentVersion Int      @default(1) @map("current_version")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  versions PromptVersion[]
+
+  @@map("prompt_templates")
+}
+
+model PromptVersion {
+  id            String   @id @default(uuid())
+  promptId      String   @map("prompt_id")
+  prompt        PromptTemplate @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  versionNumber Int      @map("version_number")
+  content       String
+  aiConfig      Json     @map("ai_config")
+  changeSummary String?  @map("change_summary")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  logs ExecutionLog[]
+
+  @@map("prompt_versions")
+}
+
+model ExecutionLog {
+  id              String        @id @default(uuid())
+  promptVersionId String        @map("prompt_version_id")
+  promptVersion   PromptVersion @relation(fields: [promptVersionId], references: [id])
+  userId          String        @map("user_id")
+  user            Profile       @relation(fields: [userId], references: [id])
+  inputData       Json?         @map("input_data")
+  outputResponse  String?       @map("output_response")
+  latencyMs       Int?          @map("latency_ms")
+  tokenUsage      Json?         @map("token_usage")
+  createdAt       DateTime      @default(now()) @map("created_at")
+
+  @@map("execution_logs")
+}

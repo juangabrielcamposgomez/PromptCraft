@@ -1,0 +1,21 @@
+{
+  "css.customData": [".vscode/tailwind-v4.json"],
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "tailwindCSS.experimental.classRegex": [
+    ["theme\\(([^)]*)\\)", "'([^']*)'"],
+    ["@apply\\s+([^;]*)", "$1"]
+  ],
+  "tailwindCSS.includeLanguages": {
+    "plaintext": "ts",
+    "typescript": "javascript",
+    "css": "css"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}
