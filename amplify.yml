@@ -5,15 +5,12 @@ applications:
       phases:
         preBuild:
           commands:
-            # 1. Instalamos pnpm globalmente en el servidor de AWS
             - npm install -g pnpm
-            # 2. Instalamos las dependencias del proyecto (desde la raíz para el monorepo)
             - cd ../.. && pnpm install
-            # 3. Generamos el cliente de Prisma para la base de datos
-            - cd ../.. && pnpm --filter @devflow/core prisma generate
+            # ✅ Fix: agregamos "exec" para correr el binario directamente
+            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # 4. Construimos la aplicación
             - pnpm run build
       artifacts:
         baseDirectory: .next
