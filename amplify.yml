@@ -1,26 +1,26 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: apps/web
+    frontend:
       platform: WEB_COMPUTE
       phases:
         preBuild:
           commands:
             - npm install -g pnpm
-            - pnpm install
-            - pnpm --filter @devflow/core exec prisma generate
+            - cd ../.. && pnpm install
+            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - pnpm --filter web build
-            # ✅ Corrección Standalone para Monorepo:
-            # Copiamos archivos estáticos a la subcarpeta jerárquica interna
-            - mkdir -p apps/web/.next/standalone/apps/web/.next
-            - cp -r apps/web/public apps/web/.next/standalone/apps/web/
-            - cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
+            - cd ../.. && pnpm --filter web build
+            # ✅ Corrección Standalone para Monorepo (Relativo a appRoot):
+            - mkdir -p .next/standalone/apps/web/.next
+            - cp -r public .next/standalone/apps/web/
+            - cp -r .next/static .next/standalone/apps/web/.next/
       artifacts:
-        baseDirectory: apps/web/.next/standalone
+        baseDirectory: .next/standalone
         files:
           - '**/*'
       cache:
         paths:
-          - node_modules/**/*
-          - apps/web/.next/cache/**/*
+          - ../../node_modules/**/*
+          - .next/cache/**/*
