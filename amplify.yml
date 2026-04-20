@@ -1,25 +1,29 @@
 version: 1
 applications:
-  - appRoot: apps/web
+  - appRoot: .
     frontend:
       platform: WEB_COMPUTE
       phases:
         preBuild:
           commands:
+            - echo "--- INICIANDO PREBUILD (MODO MONOREPO ROOT) ---"
             - npm install -g pnpm@9.0.0
-            - cd ../.. && pnpm install --frozen-lockfile
-            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
+            - pnpm install --frozen-lockfile
+            - pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # ✅ Fix Path & EACCES: 
-            # Forzamos la ejecución en el directorio correcto usando --prefix
-            # Esto evita tanto el error de 'No package.json' como el de permisos 'EACCES'
-            - cd ../.. && pnpm --prefix apps/web run build
-            # ✅ Estructura Standalone:
-            - mkdir -p .next/standalone/apps/web/.next
-            - cp -r public .next/standalone/apps/web/
-            - cp -r .next/static .next/standalone/apps/web/.next/
+            - echo "--- INICIANDO BUILD DE LA APLICACIÓN WEB ---"
+            - pnpm --filter web build
+            # ✅ Estructura Standalone Profesional para Monorepo
+            # Copiamos assets a la ruta interna jerárquica que requiere Next.js standalone
+            - mkdir -p apps/web/.next/standalone/apps/web/.next
+            - cp -r apps/web/public apps/web/.next/standalone/apps/web/
+            - cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
       artifacts:
-        baseDirectory: .next/standalone
+        baseDirectory: apps/web/.next/standalone
         files:
           - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - apps/web/.next/cache/**/*
