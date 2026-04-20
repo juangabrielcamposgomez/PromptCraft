@@ -11,11 +11,12 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
+            # 1. Ejecutamos build desde la raíz para aprovechar los filtros de pnpm
             - cd ../.. && pnpm --filter web run build
-            # ✅ Corrigiendo Path & Permisos:
-            # Eliminamos mkdir (ya existe por Next.js) y usamos rutas absolutas desde la raíz
-            - cp -r apps/web/public apps/web/.next/standalone/apps/web/
-            - cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
+            # 2. Amplify nos devuelve al contexto de apps/web en el siguiente comando.
+            # Copiamos assets usando rutas relativas al appRoot actual.
+            - cp -r public .next/standalone/apps/web/
+            - cp -r .next/static .next/standalone/apps/web/.next/
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
