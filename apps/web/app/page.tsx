@@ -1,5 +1,6 @@
 import { prisma } from "@devflow/core";
 import React from "react";
+export const dynamic = 'force-dynamic';
 import { 
   ArrowUpRight, 
   Layers, 

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import PromptRefiner from "@/components/PromptRefiner";
 
