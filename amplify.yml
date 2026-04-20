@@ -6,21 +6,18 @@ applications:
       phases:
         preBuild:
           commands:
-            - echo "--- INICIANDO PREBUILD (MODO MONOREPO ROOT) ---"
             - npm install -g pnpm@9.0.0
             - pnpm install --frozen-lockfile
             - pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - echo "--- INICIANDO BUILD DE LA APLICACIÓN WEB ---"
-            - pnpm --filter web build
-            # ✅ Estructura Standalone Profesional para Monorepo
-            # Copiamos assets a la ruta interna jerárquica que requiere Next.js standalone
-            - mkdir -p apps/web/.next/standalone/apps/web/.next
+            - pnpm --filter web run build
+            # ✅ Ajuste Fino Standalone PRO:
+            # Copiamos assets a la carpeta interna donde reside el server.js del monorepo
             - cp -r apps/web/public apps/web/.next/standalone/apps/web/
             - cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
       artifacts:
-        baseDirectory: apps/web/.next/standalone
+        baseDirectory: apps/web/.next/standalone/apps/web
         files:
           - '**/*'
       cache:
