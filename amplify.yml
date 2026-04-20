@@ -13,7 +13,7 @@ applications:
           commands:
             - cd ../.. && pnpm --filter web build
       artifacts:
-        baseDirectory: .next
+        baseDirectory: .next/standalone
         files:
           - '**/*'
       cache:
