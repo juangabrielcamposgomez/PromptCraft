@@ -12,10 +12,16 @@ applications:
         build:
           commands:
             - cd ../.. && pnpm --filter web run build
-            # ✅ Fix Robusto: Copia condicional de assets desde la raíz
-            - cd ../.. && [ -d apps/web/public ] && cp -r apps/web/public apps/web/.next/standalone/apps/web/ || echo "Public dir missing or empty"
-            - cd ../.. && [ -d apps/web/.next/static ] && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/ || echo "Static dir missing"
+            # 🔍 Diagnóstico de Estructura (Vemos esto en los logs de Amplify)
+            - echo "--- LOCALIZANDO SERVER.JS ---"
+            - find ../../ -name "server.js" -path "*standalone*" 2>/dev/null || echo "server.js not found"
+            - echo "--- VERIFICANDO CASOS ---"
+            - "[ -f .next/standalone/apps/web/server.js ] && echo 'CASO B: server.js anidado' || echo 'CASO A: server.js en raíz de standalone'"
+            # Copia de seguridad (Intentamos ambas rutas para no fallar)
+            - "[ -d public ] && cp -r public .next/standalone/apps/web/ || echo 'Public no encontrado en apps/web'"
+            - "cp -r .next/static .next/standalone/apps/web/.next/static || echo 'Static copy failed'"
       artifacts:
+        # Probamos con la ruta anidada primero ya que es un monorepo
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
