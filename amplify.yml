@@ -7,12 +7,13 @@ applications:
         preBuild:
           commands:
             - npm install -g pnpm@9.0.0
-            - cd ../.. && pnpm install --frozen-lockfile
-            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
+            - cd $(git rev-parse --show-toplevel) && pnpm install --frozen-lockfile
+            - cd $(git rev-parse --show-toplevel) && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # ✅ Encadenamos todo en una sola línea para mantener el contexto del subshell y la variable REPO_ROOT
-            - REPO_ROOT=$(pwd) && cd ../.. && pnpm --filter web run build && cp -r $REPO_ROOT/.next/static $REPO_ROOT/.next/standalone/apps/web/.next/static && ([ -d $REPO_ROOT/public ] && cp -r $REPO_ROOT/public $REPO_ROOT/.next/standalone/apps/web/ || echo "No public dir")
+            - cd $(git rev-parse --show-toplevel) && pnpm --filter web run build
+            # ✅ Localización dinámica de .next para evitar fallos de rutas relativas
+            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && echo "NEXT_DIR=$NEXT_DIR" && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir")
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
@@ -20,5 +21,5 @@ applications:
       startCommand: node server.js
       cache:
         paths:
-          - ../../node_modules/**/*
+          - node_modules/**/*
           - .next/cache/**/*
