@@ -12,16 +12,16 @@ applications:
         build:
           commands:
             - cd ../.. && pnpm --filter web run build
-            # ✅ Corrigiendo Paths: Usamos rutas ancladas a la raíz mediante ../../
-            - cp -r ../../apps/web/.next/static ../../apps/web/.next/standalone/apps/web/.next/static
-            - '[ -d ../../apps/web/public ] && cp -r ../../apps/web/public ../../apps/web/.next/standalone/apps/web/ || echo "No public dir"'
+            # ✅ Capturamos la raíz absoluta para evitar confusiones de CWD
+            - REPO_ROOT=$(cd ../.. && pwd) && cp -r $REPO_ROOT/apps/web/.next/static $REPO_ROOT/apps/web/.next/standalone/apps/web/.next/static
+            - REPO_ROOT=$(cd ../.. && pwd) && ([ -d $REPO_ROOT/apps/web/public ] && cp -r $REPO_ROOT/apps/web/public $REPO_ROOT/apps/web/.next/standalone/apps/web/ || echo "No public dir")
       artifacts:
-        # BaseDirectory anclado también
-        baseDirectory: ../../apps/web/.next/standalone/apps/web
+        # BaseDirectory relativo al appRoot (apps/web)
+        baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
       startCommand: node server.js
       cache:
         paths:
           - ../../node_modules/**/*
-          - ../../apps/web/.next/cache/**/*
+          - .next/cache/**/*
