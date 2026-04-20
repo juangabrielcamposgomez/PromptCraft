@@ -6,13 +6,16 @@ applications:
       phases:
         preBuild:
           commands:
-            - npm install -g pnpm
-            - cd ../.. && pnpm install
+            # 1. Instalamos la versión exacta de pnpm para evitar conflictos
+            - npm install -g pnpm@9.0.0
+            # 2. Instalamos dependencias del espacio de trabajo
+            - cd ../.. && pnpm install --frozen-lockfile
+            # 3. Generamos el cliente de Prisma
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
             - cd ../.. && pnpm --filter web build
-            # ✅ Corrección Standalone para Monorepo (Relativo a appRoot):
+            # ✅ Estructura Standalone para Monorepo:
             - mkdir -p .next/standalone/apps/web/.next
             - cp -r public .next/standalone/apps/web/
             - cp -r .next/static .next/standalone/apps/web/.next/
