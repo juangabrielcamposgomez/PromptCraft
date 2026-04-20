@@ -6,22 +6,18 @@ applications:
       phases:
         preBuild:
           commands:
-            - echo "--- STARTING PREBUILD ---"
             - npm install -g pnpm@9.0.0
-            - echo "--- PNPM INSTALLED ---"
-            - cd ../.. && echo "--- RUNNING PNPM INSTALL ---" && pnpm install --frozen-lockfile --reporter=append-only
-            - cd ../.. && echo "--- INSTALL FINISHED, CHECKING PRISMA ---" && ls -la packages/core/node_modules/@prisma/client || echo "Prisma client not found yet"
-            - cd ../.. && echo "--- RUNNING PRISMA GENERATE ---" && pnpm --filter @devflow/core exec prisma generate
-            - echo "--- PREBUILD COMPLETADO ---"
+            - cd ../.. && pnpm install --frozen-lockfile
+            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - echo "--- STARTING BUILD ---"
-            - cd ../.. && pnpm --filter web build
-            - echo "--- BUILD FINISHED, COPYING FILES ---"
+            # ✅ Fix EACCES: Ejecutamos el build localmente en apps/web 
+            # para evitar que pnpm escanee el root del sistema (/run/cryptsetup)
+            - pnpm run build
+            # ✅ Estructura Standalone:
             - mkdir -p .next/standalone/apps/web/.next
-            - cp -r public .next/standalone/apps/web/ || echo "Public folder missing"
-            - cp -r .next/static .next/standalone/apps/web/.next/ || echo "Static folder missing"
-            - echo "--- ASSETS COPIED ---"
+            - cp -r public .next/standalone/apps/web/
+            - cp -r .next/static .next/standalone/apps/web/.next/
       artifacts:
         baseDirectory: .next/standalone
         files:
