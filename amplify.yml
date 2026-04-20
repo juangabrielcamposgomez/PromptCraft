@@ -1,18 +1,25 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: apps/web
+    frontend:
       phases:
         preBuild:
           commands:
-            - pnpm install
-            - pnpm --filter @devflow/core prisma generate
+            # 1. Instalamos pnpm globalmente en el servidor de AWS
+            - npm install -g pnpm
+            # 2. Instalamos las dependencias del proyecto (desde la raíz para el monorepo)
+            - cd ../.. && pnpm install
+            # 3. Generamos el cliente de Prisma para la base de datos
+            - cd ../.. && pnpm --filter @devflow/core prisma generate
         build:
           commands:
+            # 4. Construimos la aplicación
             - pnpm run build
       artifacts:
-        baseDirectory: apps/web/.next
+        baseDirectory: .next
         files:
           - '**/*'
       cache:
         paths:
           - node_modules/**/*
+          - .next/cache/**/*
