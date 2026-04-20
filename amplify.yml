@@ -11,10 +11,8 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # ✅ Capturamos la ruta de la aplicación activa (apps/web) antes de cualquier CD
-            - export REPO_ROOT=$(pwd) && cd ../.. && pnpm --filter web run build
-            - export REPO_ROOT=$(pwd) && cp -r $REPO_ROOT/.next/static $REPO_ROOT/.next/standalone/apps/web/.next/static
-            - export REPO_ROOT=$(pwd) && ([ -d $REPO_ROOT/public ] && cp -r $REPO_ROOT/public $REPO_ROOT/.next/standalone/apps/web/ || echo "No public dir")
+            # ✅ Encadenamos todo en una sola línea para mantener el contexto del subshell y la variable REPO_ROOT
+            - REPO_ROOT=$(pwd) && cd ../.. && pnpm --filter web run build && cp -r $REPO_ROOT/.next/static $REPO_ROOT/.next/standalone/apps/web/.next/static && ([ -d $REPO_ROOT/public ] && cp -r $REPO_ROOT/public $REPO_ROOT/.next/standalone/apps/web/ || echo "No public dir")
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
