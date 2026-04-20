@@ -7,17 +7,15 @@ applications:
         preBuild:
           commands:
             - npm install -g pnpm@9.0.0
-            # Regresamos a la raíz para instalar dependencias y generar Prisma
-            - cd ../../ && pnpm install --frozen-lockfile
-            - cd ../../ && pnpm --filter @devflow/core exec prisma generate
+            - cd ../.. && pnpm install --frozen-lockfile
+            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            # Ejecutamos el build desde la raíz para evitar errores de escaneo pnpm
-            - cd ../../ && pnpm --filter web run build
-            # Copiamos assets a la estructura standalone (rutas relativas al appRoot: apps/web)
-            - mkdir -p .next/standalone/apps/web/.next
-            - cp -r public .next/standalone/apps/web/
-            - cp -r .next/static .next/standalone/apps/web/.next/
+            - cd ../.. && pnpm --filter web run build
+            # ✅ Corrigiendo Path & Permisos:
+            # Eliminamos mkdir (ya existe por Next.js) y usamos rutas absolutas desde la raíz
+            - cp -r apps/web/public apps/web/.next/standalone/apps/web/
+            - cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
