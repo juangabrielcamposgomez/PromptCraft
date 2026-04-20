@@ -11,7 +11,7 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - pnpm run build
+            - cd ../.. && pnpm --filter web build
       artifacts:
         baseDirectory: .next
         files:
