@@ -12,19 +12,18 @@ applications:
         build:
           commands:
             - cd ../.. && pnpm --filter web run build
-            # 🔍 Diagnóstico de Estructura (Vemos esto en los logs de Amplify)
+            # 🔍 Diagnóstico (Mantenemos esto para confirmar rutas)
             - echo "--- LOCALIZANDO SERVER.JS ---"
             - find ../../ -name "server.js" -path "*standalone*" 2>/dev/null || echo "server.js not found"
-            - echo "--- VERIFICANDO CASOS ---"
-            - "[ -f .next/standalone/apps/web/server.js ] && echo 'CASO B: server.js anidado' || echo 'CASO A: server.js en raíz de standalone'"
-            # Copia de seguridad (Intentamos ambas rutas para no fallar)
-            - "[ -d public ] && cp -r public .next/standalone/apps/web/ || echo 'Public no encontrado en apps/web'"
-            - "cp -r .next/static .next/standalone/apps/web/.next/static || echo 'Static copy failed'"
+            # Copia de assets a la ruta standalone
+            - cp -r .next/static .next/standalone/apps/web/.next/static || true
+            - "[ -d public ] && cp -r public .next/standalone/apps/web/ || true"
       artifacts:
-        # Probamos con la ruta anidada primero ya que es un monorepo
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
+      # ✅ Comando de inicio explícito para WEB_COMPUTE
+      startCommand: node server.js
       cache:
         paths:
           - ../../node_modules/**/*
