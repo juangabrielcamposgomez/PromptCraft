@@ -16,4 +16,4 @@ applications:
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
-      startCommand: node server.js
+      startCommand: PORT=8080 HOSTNAME=0.0.0.0 node server.js
