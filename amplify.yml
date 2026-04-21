@@ -7,17 +7,17 @@ applications:
         preBuild:
           commands:
             - npm install -g pnpm@9.0.0
-            - cd $(git rev-parse --show-toplevel) && pnpm install --frozen-lockfile
-            - cd $(git rev-parse --show-toplevel) && pnpm --filter @devflow/core exec prisma generate
+            - cd ../.. && pnpm install --frozen-lockfile
+            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - cd $(git rev-parse --show-toplevel) && pnpm --filter web build
+            - cd ../.. && pnpm --filter web build
+            - cp -r .next/static .next/standalone/apps/web/.next/static
+            - cp -r public .next/standalone/apps/web/public
+            - ls -d .next/standalone/apps/web/.next/static
+            - ls -d .next/standalone/apps/web/public
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
       startCommand: node server.js
-      cache:
-        paths:
-          - node_modules/**/*
-          - .next/cache/**/*
