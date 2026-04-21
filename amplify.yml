@@ -1,8 +1,8 @@
 version: 1
 applications:
   - appRoot: apps/web
+    platform: WEB_COMPUTE
     frontend:
-      platform: WEB_COMPUTE
       phases:
         preBuild:
           commands:
@@ -11,16 +11,12 @@ applications:
             - cd $(git rev-parse --show-toplevel) && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - cd $(git rev-parse --show-toplevel) && pnpm --filter web run build
-            # ✅ Ubicación dinámica y copia de assets
-            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir") && ls -R $NEXT_DIR/standalone/apps/web/
+            - cd $(git rev-parse --show-toplevel) && pnpm --filter web build
       artifacts:
-        # ✅ Subimos la raíz de standalone para incluir node_modules/
-        baseDirectory: .next/standalone
+        baseDirectory: .next/standalone/apps/web
         files:
           - '**/*'
-      # ✅ Iniciamos desde la carpeta anidada de la app
-      startCommand: HOSTNAME=0.0.0.0 node apps/web/server.js
+      startCommand: node server.js
       cache:
         paths:
           - node_modules/**/*
