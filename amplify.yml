@@ -12,12 +12,15 @@ applications:
         build:
           commands:
             - cd $(git rev-parse --show-toplevel) && pnpm --filter web run build
-            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir") && ls $NEXT_DIR/standalone/apps/web/
+            # ✅ Ubicación dinámica y copia de assets
+            - NEXT_DIR=$(find /codebuild -path "*/apps/web/.next" -not -path "*standalone*" -not -path "*node_modules*" 2>/dev/null | head -1) && cp -r $NEXT_DIR/static $NEXT_DIR/standalone/apps/web/.next/static && ([ -d $(dirname $NEXT_DIR)/public ] && cp -r $(dirname $NEXT_DIR)/public $NEXT_DIR/standalone/apps/web/ || echo "No public dir") && ls -R $NEXT_DIR/standalone/apps/web/
       artifacts:
-        baseDirectory: .next/standalone/apps/web
+        # ✅ Subimos la raíz de standalone para incluir node_modules/
+        baseDirectory: .next/standalone
         files:
           - '**/*'
-      startCommand: HOSTNAME=0.0.0.0 node server.js
+      # ✅ Iniciamos desde la carpeta anidada de la app
+      startCommand: HOSTNAME=0.0.0.0 node apps/web/server.js
       cache:
         paths:
           - node_modules/**/*
