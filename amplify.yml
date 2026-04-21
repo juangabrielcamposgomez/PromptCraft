@@ -11,7 +11,7 @@ applications:
             - cd ../.. && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - cd ../.. && pnpm --filter web build && cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/static && cp -r apps/web/public apps/web/.next/standalone/apps/web/public && ls -d apps/web/.next/standalone/apps/web/.next/static && ls -d apps/web/.next/standalone/apps/web/public
+            - cd ../.. && pnpm --filter web build && echo '=== .next contents ===' && ls apps/web/.next/ && echo '=== standalone contents ===' && ls apps/web/.next/standalone/apps/web/
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
