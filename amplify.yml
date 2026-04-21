@@ -13,7 +13,7 @@ applications:
           commands:
             - REPO=$(git rev-parse --show-toplevel) && cd $REPO && pnpm --filter web build && cp -r $REPO/apps/web/.next/static $REPO/apps/web/.next/standalone/apps/web/.next/static && cp -r $REPO/apps/web/public $REPO/apps/web/.next/standalone/apps/web/public
       artifacts:
-        baseDirectory: .next/standalone/apps/web
+        baseDirectory: .next/standalone
         files:
           - '**/*'
-      startCommand: PORT=8080 HOSTNAME=0.0.0.0 node server.js
+      startCommand: PORT=8080 HOSTNAME=0.0.0.0 node apps/web/server.js
