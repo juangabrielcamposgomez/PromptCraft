@@ -7,11 +7,11 @@ applications:
         preBuild:
           commands:
             - npm install -g pnpm@9.0.0
-            - cd ../.. && pnpm install --frozen-lockfile
-            - cd ../.. && pnpm --filter @devflow/core exec prisma generate
+            - cd $(git rev-parse --show-toplevel) && pnpm install --frozen-lockfile
+            - cd $(git rev-parse --show-toplevel) && pnpm --filter @devflow/core exec prisma generate
         build:
           commands:
-            - cd ../.. && pnpm --filter web build && echo '=== .next contents ===' && ls apps/web/.next/ && echo '=== standalone contents ===' && ls apps/web/.next/standalone/apps/web/
+            - REPO=$(git rev-parse --show-toplevel) && cd $REPO && pnpm --filter web build && cp -r $REPO/apps/web/.next/static $REPO/apps/web/.next/standalone/apps/web/.next/static && cp -r $REPO/apps/web/public $REPO/apps/web/.next/standalone/apps/web/public
       artifacts:
         baseDirectory: .next/standalone/apps/web
         files:
