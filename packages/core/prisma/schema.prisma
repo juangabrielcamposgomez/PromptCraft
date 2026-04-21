@@ -7,13 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum UserRole {
-  ADMIN
-  PROFESOR
-  APODERADO
+  url      = "postgresql://postgres:Salvador2024DB@promptcraft-db.cavgs6iey2uo.us-east-1.rds.amazonaws.com:5432/postgres?schema=public"
 }
 
 model Profile {
@@ -21,8 +15,8 @@ model Profile {
   userId        String   @unique @map("user_id")
   fullName      String   @map("full_name")
   avatarUrl     String?  @map("avatar_url")
-  role          UserRole @default(APODERADO)
-  uiPreferences Json     @default("{\"theme\": \"dark\", \"dashboard_view\": \"summary\", \"glassmorphism\": false}") @map("ui_preferences")
+  role          String   @default("APODERADO")
+  uiPreferences String   @default("{\"theme\": \"dark\", \"dashboard_view\": \"summary\", \"glassmorphism\": false}") @map("ui_preferences")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
@@ -96,7 +90,7 @@ model PromptVersion {
   prompt        PromptTemplate @relation(fields: [promptId], references: [id], onDelete: Cascade)
   versionNumber Int      @map("version_number")
   content       String
-  aiConfig      Json     @map("ai_config")
+  aiConfig      String     @map("ai_config")
   changeSummary String?  @map("change_summary")
   createdAt     DateTime @default(now()) @map("created_at")
 
@@ -111,10 +105,10 @@ model ExecutionLog {
   promptVersion   PromptVersion @relation(fields: [promptVersionId], references: [id])
   userId          String        @map("user_id")
   user            Profile       @relation(fields: [userId], references: [id])
-  inputData       Json?         @map("input_data")
+  inputData       String?         @map("input_data")
   outputResponse  String?       @map("output_response")
   latencyMs       Int?          @map("latency_ms")
-  tokenUsage      Json?         @map("token_usage")
+  tokenUsage      String?       @map("token_usage")
   createdAt       DateTime      @default(now()) @map("created_at")
 
   @@map("execution_logs")
