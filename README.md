@@ -1,160 +1,94 @@
-# PromptCraft-Academy
+# 🚀 PromptCraft Academy: SDLC AI-Augmented Engineering
 
-This Turborepo starter is maintained by the Turborepo core team.
+**PromptCraft Academy** es una plataforma de ingeniería de élite diseñada para dominar el Ciclo de Vida de Desarrollo de Software (SDLC) mediante la orquestación avanzada de Inteligencia Artificial. No es solo un generador de prompts; es un ecosistema completo que guía a desarrolladores —desde aprendices hasta profesionales— en la creación de software robusto, seguro y escalable.
 
-## Using this example
+---
 
-Run the following command:
+## 🌟 Características Principales
 
-```sh
-npx create-turbo@latest
+### 🛠️ Motor de Plantillas SDLC Especializadas
+Implementación de 14 pilares técnicos que cubren todas las fases del desarrollo profesional:
+*   **Análisis & Requerimientos**: Historias de Usuario, Análisis de Viabilidad y NFRs.
+*   **Modelado de Datos**: Diccionarios de Datos, Esquemas ER (Mermaid) y Normalización.
+*   **Arquitectura & UI**: Wireframes, Design Tokens y Blueprints de Stack Técnico.
+*   **Implementación**: Setup de Proyecto y Desarrollo de Features con planes de acción.
+*   **DevOps & QA**: Pipelines CI/CD, Planes E2E (Playwright) y Automatización de Pruebas.
+*   **Seguridad Proactiva**: Auditoría OWASP, Análisis Snyk y Defensa en Profundidad.
+
+### 📊 Methodology Hub (Scrum & Kanban)
+Gestión ágil integrada directamente en el flujo de ingeniería:
+*   **Tablero Dual**: Alterna entre la agilidad de Scrum (Sprints/Story Points) y el flujo continuo de Kanban.
+*   **Hitos Automáticos**: Sincronización en tiempo real entre la generación de artefactos de IA y el progreso del tablero.
+*   **Snapshot History**: Historial auditable de todas las iteraciones técnicas realizadas.
+
+### 🎨 Wide View UI & UX Premium
+*   **Espacio de Trabajo Expandido**: Interfaz optimizada para pantallas anchas con visualización simultánea de configuración y resultados.
+*   **Visualización Mermaid**: Renderizado dinámico de diagramas de arquitectura, flujos y esquemas de base de datos.
+*   **Diseño 100% Responsivo**: Experiencia fluida en dispositivos móviles, tablets y escritorio.
+
+---
+
+## 🏗️ Stack Tecnológico
+
+*   **Framework**: [Next.js 15+](https://nextjs.org/) (App Router, Server Components).
+*   **Estilos**: [Tailwind CSS 4](https://tailwindcss.com/) con diseño Glassmorphism.
+*   **Base de Datos**: PostgreSQL alojado en **AWS RDS**.
+*   **ORM**: [Prisma 7+](https://www.prisma.io/) con soporte para transacciones atómicas.
+*   **Testing**: [Vitest](https://vitest.dev/) con mocks avanzados para lógica de negocio.
+*   **Monorepo**: [Turborepo](https://turbo.build/) para una gestión eficiente de paquetes.
+
+---
+
+## 🚀 Guía de Inicio Rápido
+
+### Requisitos Previos
+*   Node.js 20+
+*   pnpm 9+
+
+### Instalación
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/OriundoStartup/PromptCraft-Academy.git
+   ```
+2. Instala las dependencias:
+   ```bash
+   pnpm install
+   ```
+3. Configura las variables de entorno en `.env`:
+   ```env
+   DATABASE_URL="postgresql://user:password@host:5432/db"
+   OPENAI_API_KEY="tu-api-key"
+   ```
+
+### Desarrollo
+Para iniciar el entorno de desarrollo local:
+```bash
+pnpm dev
+```
+La aplicación estará disponible en `http://localhost:3000`.
+
+### Pruebas
+Ejecutar la suite de pruebas unitarias:
+```bash
+# Todos los paquetes
+pnpm test
+
+# Específico para la web
+pnpm --filter web test
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## 🛡️ Seguridad & Calidad
+El proyecto sigue los más estrictos estándares de seguridad:
+*   **Cero Secretos Hardcodeados**: Gestión estricta mediante variables de entorno.
+*   **Auditoría OWASP**: Plantillas integradas para el análisis de vulnerabilidades.
+*   **Test Coverage**: Validación de lógica de negocio crítica en el paquete `@devflow/core`.
 
-### Apps and Packages
+---
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🤝 Contribuciones
+Mantenido por el equipo de **Oriundo Startup**. Si deseas contribuir, por favor abre un Pull Request o crea un Issue para discutir los cambios.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-npm dlx turbo build
-npm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-npm exec turbo build --filter=docs
-npm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-npm exec turbo dev
-npm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-npm exec turbo dev --filter=web
-npm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-npm exec turbo login
-npm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-npm exec turbo link
-npm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
-
+---
+*Desarrollado con ❤️ para la comunidad de ingeniería de software.*
