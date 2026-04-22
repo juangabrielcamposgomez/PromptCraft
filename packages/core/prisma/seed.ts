@@ -1,6 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { Pool } from 'pg'
 
-const prisma = new PrismaClient();
+const DATABASE_URL = process.env.DATABASE_URL?.startsWith("postgresql") 
+  ? process.env.DATABASE_URL 
+  : "postgresql://postgres:Salvador2024DB@promptcraft-db.cavgs6iey2uo.us-east-1.rds.amazonaws.com:5432/postgres";
+
+// Use Pool with SSL for AWS RDS compatibility
+const pool = new Pool({
+  connectionString: DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+})
+
+const adapter = new PrismaPg(pool)
+const prisma = new PrismaClient({ adapter })
 
 async function main() {
   console.log('🌱 Starting database seeding...');
@@ -71,31 +86,15 @@ async function main() {
     console.log(`✅ Phase created/updated: ${phase.name}`);
 
     for (const categoryName of categories) {
-      await prisma.category.upsert({
-        where: { 
-          // Note: In real life we'd likely need a unique compound index on [name, phaseId]
-          // For the seed we'll search by name within the phase if we had a more complex setup,
-          // but here we'll just check if it exists (assuming unique names for simplicity in this seed).
-          id: 'placeholder', // Upsert requires a unique identifier, see below
-        },
-        update: {},
-        create: {
-          name: categoryName,
-          phaseId: phase.id,
-        },
-      }).catch(async (e: any) => {
-        // Fallback for categories since they don't have a unique constraint on 'name' in our current schema.
-        // We manually check or create to avoid duplicates in seed.
-        const existing = await prisma.category.findFirst({
-          where: { name: categoryName, phaseId: phase.id }
-        });
-        if (!existing) {
-          await prisma.category.create({
-            data: { name: categoryName, phaseId: phase.id }
-          });
-          console.log(`   - Category created: ${categoryName}`);
-        }
+      const existing = await prisma.category.findFirst({
+        where: { name: categoryName, phaseId: phase.id }
       });
+      if (!existing) {
+        await prisma.category.create({
+          data: { name: categoryName, phaseId: phase.id }
+        });
+        console.log(`   - Category created: ${categoryName}`);
+      }
     }
   }
 
@@ -109,4 +108,5 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
+    await pool.end();
   });

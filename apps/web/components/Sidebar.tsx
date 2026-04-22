@@ -32,7 +32,7 @@ export default async function Sidebar(): Promise<React.ReactNode> {
   });
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-72 glass border-r border-white/5 flex flex-col p-6 z-50">
+    <aside className="fixed left-0 top-0 h-screen w-72 glass border-r border-white/5 hidden lg:flex flex-col p-6 z-50">
       <div className="mb-10 px-2">
         <h1 className="font-display text-2xl font-bold text-primary tracking-tighter">
           PromptCraft

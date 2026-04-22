@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: Request) {
   try {
-    const { phaseId, phaseName, blocks } = await req.json();
+    const { phaseId, phaseName, blocks, template } = await req.json();
 
     if (!apiKey) {
       return NextResponse.json(
@@ -29,33 +29,25 @@ export async function POST(req: Request) {
 
     const fullPrompt = `
       ESTRUCTURA DE PROMPT RECIBIDA:
-      1. ROL: ${blocks.rol}
-      2. CONTEXTO: ${blocks.contexto}
-      3. FRENO: ${blocks.freno}
-      4. DIAGNÓSTICO: ${blocks.diagnostico}
-      5. ACCIÓN (ANÁLISIS FUNCIONAL / LÓGICA): ${blocks.accion}
-      6. ARQUITECTURA E INFO (UI/UX): ${blocks.arquitectura}
-      7. IDENTIDAD VISUAL (DISEÑO): ${blocks.identidad}
-      8. ESQUEMA Y RELACIONES (DATABASE): ${blocks.esquema}
-      9. LÍMITES (ACCESIBILIDAD Y RENDIMIENTO): ${blocks.limites}
-      10. ENTREGA: ${blocks.entrega}
-      11. REQUERIMIENTOS NO FUNCIONALES: ${blocks.nfr}
+      ${JSON.stringify(blocks, null, 2)}
 
       FASE DEL SDLC: ${phaseName}
       CONSEJO TÉCNICO DE FASE: ${phaseContext}
+      
+      INSTRUCCIÓN ESPECIALIZADA: ${template?.instruction || "Optimiza y consolida la información."}
+      FORMATO REQUERIDO: ${template?.format || "Devuelve una explicación técnica detallada."}
 
       TAREA:
       Como Principal AI Engineer, realiza:
-      1. OPTIMIZA el prompt anterior usando la estructura de 10-11 pasos dependiendo de la fase. Inyecta el "CONSEJO TÉCNICO DE FASE" de forma orgánica.
-      2. Si es fase de Diseño de Interfaz: Aplica estrictamente TAILWIND 4 y FRAMER MOTION para animaciones. Asegura el contraste según WCAG.
-      3. EJECUTA el prompt optimizado y devuelve el resultado técnico.
-      4. EXPLICA brevemente por qué realizaste cambios específicos (ej: "Se ajustó el contraste para cumplimiento A11y").
+      1. OPTIMIZA el prompt anterior inyectando el "CONSEJO TÉCNICO DE FASE".
+      2. EJECUTA el prompt optimizado siguiendo la "INSTRUCCIÓN ESPECIALIZADA" y el "FORMATO REQUERIDO".
+      3. EXPLICA brevemente por qué realizaste cambios específicos.
 
       IMPORTANTE: Responde ÚNICAMENTE en JSON plano:
       {
         "optimizedPrompt": "...",
-        "result": "...",
-        "explanation": "..."
+        "explanation": "aquí va el resultado formateado según el FORMATO REQUERIDO",
+        "briefChangeLog": "..."
       }
     `;
 

@@ -27,9 +27,16 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${inter.variable} ${outfit.variable} font-sans bg-background text-foreground antialiased`}>
-        <div className="flex">
+        <div className="flex flex-col lg:flex-row">
           <Sidebar />
-          <main className="flex-1 ml-72 min-h-screen p-8">
+          {/* Mobile Header */}
+          <div className="lg:hidden h-16 glass border-b border-white/5 flex items-center justify-between px-6 sticky top-0 z-40">
+            <h1 className="font-display text-xl font-bold text-primary tracking-tighter">PromptCraft</h1>
+            <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+               <span className="text-[10px] font-bold text-primary">JD</span>
+            </div>
+          </div>
+          <main className="flex-1 lg:ml-72 min-h-screen p-4 md:p-8 overflow-x-hidden">
             {children}
           </main>
         </div>

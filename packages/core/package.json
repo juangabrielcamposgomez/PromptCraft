@@ -4,18 +4,29 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "pg": "^8.20.0",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
-    "prisma": "^5.22.0",
+    "@types/node": "^22.15.3",
+    "@types/pg": "^8.20.0",
+    "@vitest/coverage-v8": "^4.1.5",
+    "prisma": "^7.7.0",
     "tsx": "^4.7.2",
-    "@types/node": "^22.15.3"
+    "vitest": "^4.1.5"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "scripts": {
-    "db:seed": "pnpm prisma db seed"
+    "prisma": "prisma",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   }
 }

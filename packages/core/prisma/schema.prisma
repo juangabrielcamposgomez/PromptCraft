@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:Salvador2024DB@promptcraft-db.cavgs6iey2uo.us-east-1.rds.amazonaws.com:5432/postgres?schema=public"
 }
 
 model Profile {

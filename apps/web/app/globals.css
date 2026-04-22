@@ -1,32 +1,61 @@
 @import "tailwindcss";
 
-/* 1. Definición del tema (Variables) */
 @theme {
-  --color-background: #0B0B0B;
-  --color-foreground: #F3EFE0;
+  --color-background: #000000;
+  --color-foreground: #ffffff;
   --color-primary: #00A67E;
-  --color-accent: #9177C7;
+  --color-accent: #FFD700;
+  --color-glass: rgba(255, 255, 255, 0.03);
+  --color-glass-border: rgba(255, 255, 255, 0.1);
   
-  --radius-xl: 1.5rem;
+  --font-display: var(--font-outfit);
+  --font-sans: var(--font-inter);
 }
 
-/* 2. Definición manual de clases (Sin usar @apply para evitar el error de Turbopack) */
-@layer utilities {
-  .glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  }
-}
-
-/* 3. Estilos Base */
 @layer base {
+  * {
+    @apply border-white/5 outline-none transition-colors duration-200;
+  }
+  
+  html, body {
+    @apply h-full overflow-x-hidden;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: "cv11", "ss01";
     @apply antialiased;
   }
+}
+
+.custom-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.custom-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.glass {
+  background: var(--color-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-glass-border);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
