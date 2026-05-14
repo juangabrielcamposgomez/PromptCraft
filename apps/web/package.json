@@ -14,6 +14,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@copilotkit/react-core": "^1.57.1",
+    "@copilotkit/react-ui": "^1.57.1",
+    "@copilotkit/runtime": "^1.57.1",
+    "@copilotkit/sdk-js": "^1.57.1",
     "@devflow/core": "workspace:*",
     "@devflow/ui": "workspace:*",
     "@google/generative-ai": "^0.24.1",

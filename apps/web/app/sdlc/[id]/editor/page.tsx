@@ -5,21 +5,25 @@ import {
   Box, 
   Zap, 
   Sparkles,
-  ArrowUpRight
+  ArrowUpRight,
+  AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 export const dynamic = 'force-dynamic';
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import PromptRefiner from "@/components/PromptRefiner";
+import { headers } from "next/headers";
+import { motion } from "framer-motion";
 
-interface PhasePageProps {
+interface EditorPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function PhaseDetailPage({ params }: PhasePageProps): Promise<React.ReactNode> {
+export default async function EditorPage({ params }: EditorPageProps): Promise<React.ReactNode> {
   const { id } = await params;
 
+  // We fetch the phase (pillar)
   const phase = await prisma.sdlcPhase.findUnique({
     where: { id },
     include: {
@@ -33,6 +37,22 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
     notFound();
   }
 
+  // To get the milestone, we need the user profile.
+  const targetRouteSlug = `/sdlc/${id}/editor`;
+  
+  let milestone = await prisma.milestone.findFirst({
+    where: { targetRoute: targetRouteSlug }
+  });
+
+  // FALLBACK IMPLEMENTATION
+  let injectedBody = milestone?.body;
+  let isFallback = false;
+
+  if (!milestone || !injectedBody || injectedBody.trim() === "") {
+    isFallback = true;
+    injectedBody = `[PLANTILLA DE EMERGENCIA]\n\nContexto: Actúa como experto en ${phase.name}.\n\nTarea: Genera los requerimientos iniciales para este pilar del SDLC.\n\nFormato: Lista detallada.`;
+  }
+
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       <Link 
@@ -44,7 +64,6 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
       </Link>
 
       <header className="relative p-12 glass rounded-[3rem] overflow-hidden">
-        {/* Decorative Background */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] -z-10" />
         <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-accent/10 blur-[100px] -z-10" />
 
@@ -61,13 +80,20 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
         <p className="text-xl text-[#D7D3C2]/70 max-w-2xl leading-relaxed">
           {phase.description}
         </p>
+
+        {isFallback && (
+          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-500">
+            <AlertTriangle className="w-4 h-4" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Cargando Plantilla Maestra (Fallback Activo)</span>
+          </div>
+        )}
       </header>
 
       <section>
         <div className="flex items-center justify-between mb-8">
           <h2 className="font-display text-2xl font-bold text-white flex items-center gap-3">
             <Box className="w-6 h-6 text-accent" />
-            Categorías Disponibles
+            Hitos del Pilar (Milestones)
           </h2>
           <span className="text-xs text-[#D7D3C2]/30 font-medium uppercase tracking-widest">
             {phase.categories.length} Resultados
@@ -78,7 +104,7 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
           {phase.categories.map((category) => (
             <Link 
               key={category.id} 
-              href={`/category/${category.id}`}
+              href={`/sdlc/${id}/editor?template=${category.name.toLowerCase().replace(/ /g, '-')}`}
               className="group p-6 glass rounded-2xl flex items-center justify-between transition-all duration-300 hover:bg-white/5 hover:border-white/20 active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">
@@ -90,7 +116,7 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
                     {category.name}
                   </h3>
                   <p className="text-xs text-[#D7D3C2]/40 mt-0.5">
-                    Plantillas de prompts especializadas
+                    Hito Técnico Asignado
                   </p>
                 </div>
               </div>
@@ -99,9 +125,9 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
           ))}
 
           {phase.categories.length === 0 && (
-            <div className="col-span-full py-20 glass rounded-[2rem] flex flex-col items-center justify-center text-center">
+            <div className="col-span-full py-20 glass rounded-4xl flex flex-col items-center justify-center text-center">
               <Sparkles className="w-12 h-12 text-accent/20 mb-4" />
-              <p className="text-[#D7D3C2]/40 font-medium">No hay categorías asignadas a esta fase todavía.</p>
+              <p className="text-[#D7D3C2]/40 font-medium">No hay hitos asignados a este pilar todavía.</p>
             </div>
           )}
         </div>
@@ -111,14 +137,31 @@ export default async function PhaseDetailPage({ params }: PhasePageProps): Promi
         <div className="mb-8 px-4">
           <h2 className="font-display text-2xl font-bold text-white flex items-center gap-3">
             <Sparkles className="w-6 h-6 text-primary" />
-            PromptRefiner: Professional AI Optimizer
+            PromptRefiner: Editor de Hito
           </h2>
           <p className="text-sm text-[#D7D3C2]/50 mt-1">
-            Optimiza tu prompt con ingeniería de 7 pasos y recibe una explicación técnica experta.
+            Optimiza el hito actual de forma atómica con la identidad de The Forge.
           </p>
         </div>
-        <PromptRefiner phase={phase} />
+        <PromptRefiner phase={phase} injectedBody={injectedBody} />
       </section>
+
+      {/* FOOTER: SEQUENTIAL PROGRESS INDICATOR */}
+      <footer className="pt-20 pb-10 flex flex-col items-center gap-6">
+        <div className="w-full max-w-2xl h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/10">
+          <motion.div 
+            className="h-full bg-linear-to-r from-primary to-accent"
+            initial={{ width: 0 }}
+            animate={{ width: `${(phase.orderIndex / 8) * 100}%` }}
+            transition={{ duration: 1.5, ease: "circOut" }}
+          />
+        </div>
+        <div className="flex justify-between w-full max-w-2xl text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
+          <span>Inicio SDLC</span>
+          <span className="text-primary">Fase Actual: {phase.name}</span>
+          <span>Producción</span>
+        </div>
+      </footer>
     </div>
   );
 }

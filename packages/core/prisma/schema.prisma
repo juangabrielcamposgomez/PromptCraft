@@ -10,17 +10,23 @@ datasource db {
 }
 
 model Profile {
-  id            String   @id @default(uuid())
-  userId        String   @unique @map("user_id")
-  fullName      String   @map("full_name")
-  avatarUrl     String?  @map("avatar_url")
-  role          String   @default("APODERADO")
-  uiPreferences String   @default("{\"theme\": \"dark\", \"dashboard_view\": \"summary\", \"glassmorphism\": false}") @map("ui_preferences")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid())
+  userId           String   @unique @map("user_id")
+  fullName         String   @map("full_name")
+  avatarUrl        String?  @map("avatar_url")
+  role             String   @default("APODERADO")
+  forgedRole       String?  @map("forged_role")
+  forgedStack      String?  @map("forged_stack")
+  forgedPattern    String?  @default("AgentX") @map("forged_pattern")
+  forgedMethodology String? @map("forged_methodology")
+  hasForgedIdentity Boolean @default(false) @map("has_forged_identity")
+  uiPreferences    String   @default("{\"theme\": \"dark\", \"dashboard_view\": \"summary\", \"glassmorphism\": false}") @map("ui_preferences")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
-  projects Project[]
-  logs     ExecutionLog[]
+  projects   Project[]
+  logs       ExecutionLog[]
+  milestones Milestone[]
 
   @@map("profiles")
 }
@@ -111,4 +117,26 @@ model ExecutionLog {
   createdAt       DateTime      @default(now()) @map("created_at")
 
   @@map("execution_logs")
+}
+
+model AppConfig {
+  id             String   @id @default("global_config")
+  isGlobalPaused Boolean  @default(false) @map("is_global_paused")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("app_config")
+}
+
+model Milestone {
+  id            String   @id @default(uuid())
+  profileId     String   @map("profile_id")
+  profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  title         String
+  body          String   @db.Text
+  targetRoute   String   @map("target_route")
+  isCompleted   Boolean  @default(false) @map("is_completed")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("milestones")
 }

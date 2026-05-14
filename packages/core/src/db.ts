@@ -10,9 +10,11 @@ if (!DATABASE_URL) {
   throw new Error("DATABASE_URL is not defined in environment variables");
 }
 
+const isLocal = DATABASE_URL.includes("localhost") || DATABASE_URL.includes("127.0.0.1");
+
 const pool = new Pool({
   connectionString: DATABASE_URL,
-  ssl: {
+  ssl: isLocal ? false : {
     rejectUnauthorized: false
   }
 })

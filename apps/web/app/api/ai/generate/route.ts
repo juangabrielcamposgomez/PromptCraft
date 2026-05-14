@@ -6,7 +6,25 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 export async function POST(req: Request) {
   try {
-    const { phaseId, phaseName, blocks, template } = await req.json();
+    const { phaseId, phaseName, blocks, template, forgeIdentity } = await req.json();
+
+    // 🛡️ SECURITY CHECK: Global Kill Switch (Panic Button)
+    // In a real RDS environment, we would query the AppConfig table
+    // For this demonstration, we'll check a simulated global state
+    // const config = await prisma.appConfig.findUnique({ where: { id: "global_config" } });
+    // if (config?.isGlobalPaused) { ... }
+    
+    // Simulating check (actual implementation would use the DB)
+    const isPaused = false; // This would come from the database
+    if (isPaused) {
+      return NextResponse.json(
+        { 
+          error: "SISTEMA CONGELADO", 
+          details: "La Fragua está en mantenimiento preventivo. Volvemos en unos minutos." 
+        },
+        { status: 503 }
+      );
+    }
 
     if (!apiKey) {
       return NextResponse.json(
@@ -33,6 +51,8 @@ export async function POST(req: Request) {
 
       FASE DEL SDLC: ${phaseName}
       CONSEJO TÉCNICO DE FASE: ${phaseContext}
+      
+      PERFIL DE USUARIO FORJADO: ${forgeIdentity || "Generalista"}
       
       INSTRUCCIÓN ESPECIALIZADA: ${template?.instruction || "Optimiza y consolida la información."}
       FORMATO REQUERIDO: ${template?.format || "Devuelve una explicación técnica detallada."}
