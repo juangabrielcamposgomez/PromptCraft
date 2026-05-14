@@ -3,7 +3,7 @@ import { SPECIALIZED_TEMPLATES } from './templates.config'
 
 describe('SPECIALIZED_TEMPLATES', () => {
   it('should have all required properties for each template', () => {
-    Object.entries(SPECIALIZED_TEMPLATES).forEach(([key, template]) => {
+    Object.values(SPECIALIZED_TEMPLATES).forEach((template) => {
       expect(template.instruction).toBeDefined()
       expect(typeof template.instruction).toBe('string')
       expect(template.instruction.length).toBeGreaterThan(0)

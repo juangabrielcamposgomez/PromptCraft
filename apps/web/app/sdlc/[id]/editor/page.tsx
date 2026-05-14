@@ -1,4 +1,4 @@
-import { prisma } from "@devflow/core";
+import { prisma, Category } from "@devflow/core";
 import { 
   ArrowLeft, 
   ChevronRight, 
@@ -101,7 +101,7 @@ export default async function EditorPage({ params }: EditorPageProps): Promise<R
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {phase.categories.map((category) => (
+          {phase.categories.map((category: Category) => (
             <Link 
               key={category.id} 
               href={`/sdlc/${id}/editor?template=${category.name.toLowerCase().replace(/ /g, '-')}`}
