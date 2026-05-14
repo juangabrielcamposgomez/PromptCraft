@@ -1,6 +1,6 @@
 import { 
   User, Cpu, Workflow, Terminal, BookOpen, 
-  Zap, BrainCircuit, Rocket, ShieldCheck, Microscope
+  Zap, BrainCircuit
 } from "lucide-react";
 
 export const FORGE_PILLARS = [
@@ -11,7 +11,13 @@ export const FORGE_PILLARS = [
   { id: "framework", label: "Metodología", icon: BookOpen },
 ];
 
-export const FORGE_TEMPLATES: Record<string, any> = {
+interface ForgeTemplate {
+  instruction: string;
+  format: string;
+  panelA_style: string;
+}
+
+export const FORGE_TEMPLATES: Record<string, ForgeTemplate> = {
   "Definición de Stack Personal": {
     instruction: "Actúa como un Coach de Ingeniería de Élite. Tu misión es configurar el ecosistema personal del usuario. Si elige 'Investigación Profunda', inyecta automáticamente la recomendación de Gemini 1.5 Pro (2M tokens). Explica la jerarquía Etapa -> Plan -> Ejecución para maximizar la eficiencia.",
     format: "Genera una tabla comparativa de herramientas y una justificación técnica basada en el patrón AgentX (ahorro del 62.1% de tokens).",

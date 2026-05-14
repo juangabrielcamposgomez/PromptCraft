@@ -2,7 +2,7 @@
   "name": "promptcraft-academy",
   "private": true,
   "scripts": {
-    "build": "pnpm --filter web build",
+    "build": "pnpm --filter @devflow/core db:generate && pnpm --filter web build",
     "dev": "turbo dev",
     "lint": "turbo lint"
   },
