@@ -37,8 +37,8 @@ describe('SPECIALIZED_TEMPLATES', () => {
     const mermaidTemplates = ['Esquema ER', 'Wireframes', 'Desarrollo de Features', 'Configuración de CI/CD', 'Auditoría OWASP', 'Automatización de Pruebas']
     
     mermaidTemplates.forEach(key => {
-      const template = SPECIALIZED_TEMPLATES[key]
-      expect(template.format).toContain('mermaid')
+      const template = SPECIALIZED_TEMPLATES[key as keyof typeof SPECIALIZED_TEMPLATES]
+      expect(template?.format).toContain('mermaid')
     })
   })
 })
