@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  CheckCircle2, Circle, Info, Sparkles, BrainCircuit, 
-  ChevronRight, X, UserCheck, ShieldCheck, Target
+  CheckCircle2, Circle, Info, BrainCircuit, 
+  X, Target
 } from "lucide-react";
 import { useTutorial } from "../context/TutorialContext";
 import { clsx, type ClassValue } from "clsx";

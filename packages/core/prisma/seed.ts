@@ -2,9 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import { Pool } from 'pg'
 
-const DATABASE_URL = process.env.DATABASE_URL?.startsWith("postgresql") 
-  ? process.env.DATABASE_URL 
-  : "postgresql://postgres:Salvador2024DB@promptcraft-db.cavgs6iey2uo.us-east-1.rds.amazonaws.com:5432/postgres";
+const DATABASE_URL = process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/postgres";
 
 // Use Pool with SSL for AWS RDS compatibility
 const pool = new Pool({
